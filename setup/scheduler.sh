@@ -6,13 +6,19 @@ set -e
 
 main() {
     # Generate plist file from current directory
-    cat "$(pwd)/setup/sleep-template.plist" \
+    cat "$(pwd)/setup/bedtime-template.plist" \
         | awk '{sub(/ENTER_PATH_HERE/,ENVIRON["PWD"]); print}' \
-        > setup/sleep.plist
+        > setup/bedtime.plist
     user_id=$(id -u)
+    plist_dir="$(pwd)/setup/bedtime.plist"
 
-    echo "$user_id"
-    launchctl bootstrap gui/$user_id "$(pwd)/setup/sleep.plist"
+    mkdir -p ~/Library/LaunchAgents
+
+    sudo cp $plist_dir ~/Library/LaunchAgents
+
+    launchctl bootout user/$user_id/~/Library/LaunchAgents/bedtime.plist 2> /dev/null
+    launchctl enable user/$user_id/~/Library/LaunchAgents/bedtime.plist
+    launchctl bootstrap gui/$user_id ~/Library/LaunchAgents/bedtime.plist
 }
 
 main $@

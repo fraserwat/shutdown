@@ -1,6 +1,6 @@
 build:
-	chmod +x sleep.sh
-	chmod +x setup/*
+	chmod 777 bedtime.sh
+	chmod 777 setup/*
 
 	echo "\n$(USER) ALL=(ALL) /sbin/shutdown" | sudo EDITOR='tee -a' visudo
 	setup/scheduler.sh
